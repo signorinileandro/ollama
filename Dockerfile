@@ -126,6 +126,8 @@ ENV LD_LIBRARY_PATH=/usr/local/nvidia/lib:/usr/local/nvidia/lib64
 ENV NVIDIA_DRIVER_CAPABILITIES=compute,utility
 ENV NVIDIA_VISIBLE_DEVICES=all
 ENV OLLAMA_HOST=0.0.0.0:11434
+ENV OLLAMA_MODELS=/workspace/models
+ENV OLLAMA_ORIGINS=*
 EXPOSE 11434
 ENTRYPOINT ["/bin/ollama"]
 CMD ["serve"]
