@@ -283,17 +283,17 @@ func TestChatMiddleware(t *testing.T) {
 								Type       string   `json:"type"`
 								Required   []string `json:"required"`
 								Properties map[string]struct {
-									Type        string   `json:"type"`
-									Description string   `json:"description"`
-									Enum        []string `json:"enum,omitempty"`
+									Type        api.PropertyType `json:"type"`
+									Description string           `json:"description"`
+									Enum        []string         `json:"enum,omitempty"`
 								} `json:"properties"`
 							}{
 								Type:     "object",
 								Required: []string{"location"},
 								Properties: map[string]struct {
-									Type        string   `json:"type"`
-									Description string   `json:"description"`
-									Enum        []string `json:"enum,omitempty"`
+									Type        api.PropertyType `json:"type"`
+									Description string           `json:"description"`
+									Enum        []string         `json:"enum,omitempty"`
 								}{
 									"location": {
 										Type:        "string",
