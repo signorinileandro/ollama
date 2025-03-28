@@ -116,7 +116,7 @@ COPY --from=build /bin/ollama /bin/ollama
 
 FROM ubuntu:20.04
 RUN apt-get update \
-    && apt-get install -y ca-certificates \
+    && apt-get install -y ca-certificates curl jq\
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 COPY --from=archive /bin /usr/bin
@@ -129,5 +129,21 @@ ENV OLLAMA_HOST=0.0.0.0:11434
 ENV OLLAMA_MODELS=/workspace/models
 ENV OLLAMA_ORIGINS=*
 EXPOSE 11434
-ENTRYPOINT ["/bin/ollama"]
-CMD ["serve"]
+
+# Create entrypoint script
+RUN echo '#!/bin/bash\n\
+ollama serve &\n\
+sleep 5\n\
+ollama pull qwq:latest\n\
+while ! curl -s http://localhost:11434/v1/models | jq -e '\''.data[] | select(.id == "qwq:latest")'\'' > /dev/null; do\n\
+    echo "Waiting qwq:latest pull...";\n\
+    sleep 10;\n\
+done\n\
+curl http://localhost:11434/api/generate -d '\''{"model": "qwq:latest", "keep_alive": -1}'\''\n\
+echo "Loaded qwq:latest in memory."\n\
+wait' > /entrypoint.sh && \
+    chmod +x /entrypoint.sh
+
+
+# Use the custom entrypoint script
+ENTRYPOINT ["/entrypoint.sh"]
